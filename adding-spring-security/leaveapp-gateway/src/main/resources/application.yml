@@ -1,0 +1,45 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: leaveapp-gateway
+  security:
+    oauth2:
+      client:
+        provider:
+          wso2:
+            issuer-uri: https://localhost:9443/oauth2/token
+#            issuer-uri: http://localhost:8090/auth/realms/spring-cloud-gateway-realm
+#          keycloak:
+#            user-name-attribute: preferred_username
+        registration:
+#          keycloak:
+          wso2:
+#            client-id: spring-cloud-gateway-client
+            client-id: jkUmUgqmg4Gz4OsX0AI497y4_yIa
+#            client-secret: k725YLf1lT3nC88Ki8L3plZa8Z3Jeo37
+            client-secret: Af97rWZ0UwhIryPbVT5vq5ewCgQa
+            redirect-uri: http://localhost:8085/login/oauth2/code/wso2
+            authorization-grant-type: authorization_code
+            scope: openid
+
+  cloud:
+    gateway:
+      default-filters:
+      - TokenRelay
+
+      routes:
+      - id: httpbin
+        uri: http://localhost:8100/
+        predicates:
+        - Path=/**
+
+logging:
+  level:
+    org:
+      springframework:
+        cloud.gateway: DEBUG
+        http.server.reactive: DEBUG
+        web.reactive: DEBUG
+        security: DEBUG
